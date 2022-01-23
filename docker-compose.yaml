@@ -1,0 +1,69 @@
+version: "3.9"
+services:
+  # MySQL
+  ## versions
+  mysql-8.0:
+    platform: linux/x86_64
+    container_name: mysql
+    hostname: mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./mysql/8.0/data:/var/lib/mysql"
+  ## GUI tool
+  phpmyadmin:
+    container_name: phpmyadmin
+    hostname: phpmyadmin
+    image: phpmyadmin:latest
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8901:80"
+  # MongoDB
+  ## versions
+  mongo-5.0:
+    container_name: mongo
+    hostname: mongo
+    image: mongo:5.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo/5.0/data:/data
+  ## GUI tool
+  redis-commander:
+    container_name: mongo-express
+    hostname: mongo-express
+    image: mongo-express:latest
+    ports:
+      - "8902:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_SERVER: mongo
+  # Redis
+  ## versions
+  redis-6.2:
+    container_name: redis
+    hostname: redis
+    image: redis:6.2
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./redis/6.2/data:/data"
+  ## GUI tool
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    ports:
+      - "8903:8081"
+    environment:
+      - REDIS_HOSTS=local:redis:6379
